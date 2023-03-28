@@ -2,47 +2,44 @@ package scenarios;
 
 import com.github.javafaker.Faker;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import page.LoginPage;
+import org.openqa.selenium.chrome.ChromeOptions;
 import page.NewPromotionPage;
-
-import java.util.concurrent.TimeUnit;
+import seleniumUtils.*;
 
 public class TestNewPromotionPage {
     WebDriver driver;
     Faker faker = new Faker();
+    SettingsBrowser sttgsBrowser;
+    Asserts asserts;
     NewPromotionPage newPromotionPage;
     String urlMoisesNewPromotion = "http://localhost:3000/financial/promotions/new";
-    String urlMoisesPromotion = "http://localhost:3000/financial/promotions";
     String nomeTipoPromocaoDesconto = "Teste Desconto " + faker.name().username();
+    String nomeTipoPromocaoCombo = "Teste Combo " + faker.name().username();
     String regiaoDeVendas = "B51007";
     String tipoLimiteQtd = "Quantidade";
     String limiteMaximo = "1000";
     String limiteMinimo = "1";
     String msgPromocaoSucesso = "//h3[contains(text(),'Promoção salva com sucesso')]";
-    String containsTextSelecao = "Seleção 1";
+    String containsTextSelecaoUm = "Seleção 1";
+    String containsTextSelecaoDois = "Seleção 2";
     String confirmacaoPromocao = "Deseja realmente salvar a promoção com os dados informados?";
     String promocaoSalvaSucesso = "Promoção salva com sucesso";
     @Before
     public void setupBrowser(){
         driver = new ChromeDriver();
+        sttgsBrowser = new SettingsBrowser(driver);
         newPromotionPage = new NewPromotionPage(driver);
-        driver.manage().window().maximize();
-        driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
-        driver.manage().timeouts().setScriptTimeout(60, TimeUnit.SECONDS);
-        driver.get(urlMoisesNewPromotion);
-        validateContainsText("Nova Promoção");
+        asserts = new Asserts(driver);
+        sttgsBrowser.setupBrowser(urlMoisesNewPromotion);
     }
-
     @Test
-    public void novaPromocaoDescontoAtiva() throws InterruptedException {
+    public void novaPromocaoDescontoAtiva() {
         newPromotionPage.preencherNomePromocao(nomeTipoPromocaoDesconto);
-        String promocaoCriada = nomeTipoPromocaoDesconto;
+        String promocaoCriadaDesconto = nomeTipoPromocaoDesconto;
         newPromotionPage.selecionarTipoPromocao();
         newPromotionPage.selecionarPromocaoTipoDesconto();
         newPromotionPage.selecionarCanal();
@@ -53,39 +50,63 @@ public class TestNewPromotionPage {
         newPromotionPage.selecionarDataFinal();
         newPromotionPage.selecionarTooglePromocaoAtiva();
         newPromotionPage.clicarBotaoSeguinte();
-        validateContainsText(containsTextSelecao);
-        newPromotionPage.selecionaTipoLimite(tipoLimiteQtd);
-        newPromotionPage.informaLimiteMaximo(limiteMaximo);
+        asserts.validateContainsText(containsTextSelecaoUm);
+        newPromotionPage.selecionaTipoLimiteSelecaoUm(tipoLimiteQtd);
         newPromotionPage.informaLimiteMinimo(limiteMinimo);
-        newPromotionPage.inserirPorcentagemDesconto();
-        newPromotionPage.inserirSkuLista1();
+        newPromotionPage.informaLimiteMaximo(limiteMaximo);
+        newPromotionPage.inserirPorcentagemDescontoSelecaoUm();
+        newPromotionPage.inserirSkuListaUm();
         newPromotionPage.waitClicarBotaoAdicionarSku();
         newPromotionPage.waitClicarBotaoSalvarPromocao();
-        validateContainsText(confirmacaoPromocao);
-        Thread.sleep(1500);
+        asserts.validateContainsText(confirmacaoPromocao);
         newPromotionPage.waitClicarBotaoConfirmaPromocao();
-        Thread.sleep(1500);
-        validateEqualsText(promocaoSalvaSucesso, msgPromocaoSucesso);
+        newPromotionPage.waitMsgPromoSalva();
+        asserts.validateEqualsText(promocaoSalvaSucesso, msgPromocaoSucesso);
         newPromotionPage.waitClicaBotaoOk();
-        driver.get(urlMoisesPromotion);
-        validateContainsText(promocaoCriada);
+        newPromotionPage.waitTelaNovaPromo();
+        asserts.validateContainsText(promocaoCriadaDesconto);
     }
     @Test
-    public void test(){
+    public void novaPromocaoComboInterativoAtiva(){
+        newPromotionPage.preencherNomePromocao(nomeTipoPromocaoCombo);
+        String promocaoCriadaCombo = nomeTipoPromocaoCombo;
+        newPromotionPage.selecionarTipoPromocao();
+        newPromotionPage.selecionarPromocaoTipoCombo();
+        newPromotionPage.selecionarCanal();
+        newPromotionPage.selecionarTipoCanalBees();
         newPromotionPage.selecionarRegiaoVendas(regiaoDeVendas);
-    }
-
-    public void validateContainsText(String textContains){
-        Assert.assertTrue(driver.getPageSource().contains(textContains));
-    }
-
-    public void validateEqualsText(String msgEsperada, String equalsText){
-        Assert.assertEquals(msgEsperada, driver.findElement(By.xpath(equalsText)).getText());
+        newPromotionPage.selecionarSegmentoMercearia();
+        newPromotionPage.selecionarDataInicial();
+        newPromotionPage.selecionarDataFinal();
+        newPromotionPage.selecionarTooglePromocaoAtiva();
+        newPromotionPage.clicarBotaoSeguinte();
+        asserts.validateContainsText(containsTextSelecaoUm);
+        newPromotionPage.selecionaTipoLimiteSelecaoUm(tipoLimiteQtd);
+        newPromotionPage.informaLimiteMinimo(limiteMinimo);
+        newPromotionPage.informaLimiteMaximo(limiteMaximo);
+        newPromotionPage.inserirPorcentagemDescontoSelecaoUm();
+        newPromotionPage.inserirSkuListaUm();
+        newPromotionPage.waitClicarBotaoAdicionarSku();
+        newPromotionPage.clicarBotaoNovoItem();
+        asserts.validateContainsText(containsTextSelecaoDois);
+        newPromotionPage.selecionaTipoLimiteSelecaoDois(tipoLimiteQtd);
+        newPromotionPage.informaLimiteMinimo(limiteMinimo);
+        newPromotionPage.informaLimiteMaximo(limiteMaximo);
+        newPromotionPage.inserirPorcentagemDescontoSelecaoDois();
+        newPromotionPage.inserirSkuListaDois();
+        newPromotionPage.waitClicarBotaoAdicionarSku();
+        newPromotionPage.waitClicarBotaoSalvarPromocao();
+        asserts.validateContainsText(confirmacaoPromocao);
+        newPromotionPage.waitClicarBotaoConfirmaPromocao();
+        newPromotionPage.waitMsgPromoSalva();
+        asserts.validateEqualsText(promocaoSalvaSucesso, msgPromocaoSucesso);
+        newPromotionPage.waitClicaBotaoOk();
+        newPromotionPage.waitTelaNovaPromo();
+        asserts.validateContainsText(promocaoCriadaCombo);
     }
     @After
-    public void closeBrowser() throws InterruptedException {
-        Thread.sleep(1000);
-        driver.quit();
+    public void closeBrowser() {
+        sttgsBrowser.closeBrowser();
     }
 
 }
