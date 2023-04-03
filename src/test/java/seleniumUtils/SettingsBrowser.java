@@ -9,12 +9,9 @@ import java.util.concurrent.TimeUnit;
 
 public class SettingsBrowser {
     WebDriver driver;
-    NewPromotionPage newPromotionPage;
-
     public SettingsBrowser(WebDriver driver) {
         this.driver = driver;
     }
-
     public void setupBrowser(String urlPagina){
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
@@ -22,7 +19,6 @@ public class SettingsBrowser {
         driver.manage().timeouts().setScriptTimeout(20, TimeUnit.SECONDS);
         driver.get(urlPagina);
     }
-
     public void closeBrowser(){
         driver.quit();
     }

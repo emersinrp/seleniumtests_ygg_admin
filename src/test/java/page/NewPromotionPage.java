@@ -7,7 +7,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
-
 public class NewPromotionPage {
     WebDriver driver;
     WebDriverWait wait;
@@ -26,17 +25,22 @@ public class NewPromotionPage {
     String DATAFINAL = "//input[@placeholder='Data Final']";
     String TOGGLEPROMOCAOATIVA = "//label[contains(text(),'Promoção Ativa')]";
     String TOGGLEPROMOCAOEXCLUSIVA = "//label[contains(text(),'Promoção Exclusiva')]";
-    String BOTAOSEGUINTE = "//button[contains(text(),'Seguinte')]";
+    String TOOGLESKUOBRIGATORIO = "//label[contains(text(),'Sku Obrigatório')]";
+    String BOTAOSEGUINTE = "//span[contains(text(),'Seguinte')]";
     String TIPODELIMITESELECAOUM = "//input[@id='react-select-itemsPromotions.0.limit_type-input']";
     String TIPODELIMITESELECAODOIS = "//input[@id='react-select-itemsPromotions.1.limit_type-input']";
     String LIMITEMAXIMO = "//input[@placeholder='Ex. 12 caixas']";
     String LIMITEMINIMO = "//input[@placeholder='Ex. 2 caixas']";
+    String INICIODAFAIXA = "//input[@placeholder='Inicio da Faixa']";
+    String FIMDAFAIXA = "//input[@placeholder='Fim da Faixa']";
     String PORCENTAGEMDESCONTO = "//input[@placeholder='Ex. 30%']";
+    String PORCENTAGEMDESCONTOFAIXAUM = "//input[@placeholder='Desconto aplicado para a faixa']";
     String INSERIRSKULISTAUM = "//input[@id='react-select-3-input']";
-    String INSERIRSKULISTADOIS = "//ul[1]//div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/input[1]";
-    String BOTAOADICIONARSKU = "//button[contains(text(),'Adicionar')]";
-    String BOTAONOVOITEM = "//button[contains(text(),'+ Novo Item')]";
-    String BOTAOSALVARPROMOCAO = "//button[contains(text(),'Salvar Promoção')]";
+    String INSERIRSKULISTADOIS = "//input[@id='react-select-itemsPromotions.1.limit_type-input']";
+    String BOTAOADICIONARSKU = "//span[contains(text(),'Adicionar')]";
+    String BOTAOADICIONARPROGRESSIVO = "//div[2]//ul[1]//div[3]//div[4]/button[1]";
+    String BOTAONOVOITEM = "//button[contains(text(),'Novo Item')]";
+    String BOTAOSALVARPROMOCAO = "//span[contains(text(),'Salvar Promoção')]";
     String BOTAOCONFIRMARPROMOCAO = "//div[6]//div[2]//div[1]/button[1]";
     String BOTAOOK= "//button[contains(text(),'OK')]";
     String MSGPROMOSUCESSO = "//h3[contains(text(),'Promoção salva com sucesso')]";
@@ -87,7 +91,6 @@ public class NewPromotionPage {
 
         return SKUSVALIDOSLISTA2;
     }
-
     public void preencherNomePromocao(String nomeTipoPromocao) {
         boolean campoNomePromocao = false;
 
@@ -101,31 +104,24 @@ public class NewPromotionPage {
         }
         //driver.findElement(By.xpath(NOMEPROMOCAO)).sendKeys(nomeTipoPromocao);
     }
-
     public void selecionarTipoPromocao() {
         driver.findElement(By.xpath(SELECIONARPROMOCAO)).click();
     }
-
     public void selecionarPromocaoTipoDesconto() {
         driver.findElement(By.xpath(TIPOPROMOCAODESCONTO)).click();
     }
-
     public void selecionarPromocaoTipoCombo() {
         driver.findElement(By.xpath(TIPOPROMOCAOCOMBO)).click();
     }
-
     public void selecionarPromocaoTipoProgressivo() {
         driver.findElement(By.xpath(TIPOPROMOCAOPROGRESSIVO)).click();
     }
-
     public void selecionarPromocaoTipoComboFixo() {
         driver.findElement(By.xpath(TIPOPROMOCAOCOMBOFIXO)).click();
     }
-
     public void selecionarCanal() {
         driver.findElement(By.xpath(SELECIONARTIPOCANAL)).click();
     }
-
     public void selecionarTipoCanalBees() {
         driver.findElement(By.xpath(TIPOCANALBEES)).click();
         driver.findElement(By.xpath(SELECIONARTIPOCANAL)).click();
@@ -154,6 +150,18 @@ public class NewPromotionPage {
     public void selecionarTooglePromocaoExclusiva(){
         driver.findElement(By.xpath(TOGGLEPROMOCAOEXCLUSIVA)).click();
     }
+    public void waitSelecionarToogleSkuObrigatorio(){
+        boolean btnToogleSkuObg = false;
+
+        while (!btnToogleSkuObg) {
+            try {
+                driver.findElement(By.xpath(TOOGLESKUOBRIGATORIO)).click();
+                btnToogleSkuObg = true;
+            } catch (Exception e) {
+                btnToogleSkuObg = false;
+            }
+        }
+    }
     public void clicarBotaoSeguinte(){
         driver.findElement(By.xpath(BOTAOSEGUINTE)).click();
     }
@@ -169,10 +177,22 @@ public class NewPromotionPage {
     public void informaLimiteMinimo(String limiteMinimo){
         driver.findElement(By.xpath(LIMITEMINIMO)).sendKeys(limiteMinimo);
     }
+    public void informaInicioDaFaixa(String inicioDaFaixa){
+        driver.findElement(By.xpath(INICIODAFAIXA)).clear();
+        driver.findElement(By.xpath(INICIODAFAIXA)).sendKeys(inicioDaFaixa);
+    }
+    public void informaFimDaFaixa(String fimDaFaixa){
+        driver.findElement(By.xpath(FIMDAFAIXA)).clear();
+        driver.findElement(By.xpath(FIMDAFAIXA)).sendKeys(fimDaFaixa);
+    }
     public void inserirPorcentagemDescontoSelecaoUm(){
         int valorDesconto = new Random().nextInt(4);
         String porcentagensDesconto = porcentagensValidasListaUm()[valorDesconto];
         driver.findElement(By.xpath(PORCENTAGEMDESCONTO)).sendKeys(porcentagensDesconto);
+    }
+    public void inserirPorcentagemDescontoFaixa(String porcentagemDescontoFaixaUm){
+        driver.findElement(By.xpath(PORCENTAGEMDESCONTOFAIXAUM)).clear();
+        driver.findElement(By.xpath(PORCENTAGEMDESCONTOFAIXAUM)).sendKeys(porcentagemDescontoFaixaUm);
     }
     public void inserirPorcentagemDescontoSelecaoDois(){
         int valorDesconto = new Random().nextInt(4);
@@ -195,6 +215,18 @@ public class NewPromotionPage {
         while (!btnAdicionarSkuClickable) {
             try {
                 driver.findElement(By.xpath(BOTAOADICIONARSKU)).click();
+                btnAdicionarSkuClickable = true;
+            } catch (Exception e) {
+                btnAdicionarSkuClickable = false;
+            }
+        }
+    }
+    public void waitClicarBotaoAdicionarSkuProgressivo(){
+        boolean btnAdicionarSkuClickable = false;
+
+        while (!btnAdicionarSkuClickable) {
+            try {
+                driver.findElement(By.xpath(BOTAOADICIONARPROGRESSIVO)).click();
                 btnAdicionarSkuClickable = true;
             } catch (Exception e) {
                 btnAdicionarSkuClickable = false;
@@ -245,6 +277,5 @@ public class NewPromotionPage {
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(CAMPOTELAPROMO)));
         element.isDisplayed();
     }
-
 
 }
