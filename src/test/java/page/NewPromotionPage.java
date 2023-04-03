@@ -36,9 +36,9 @@ public class NewPromotionPage {
     String PORCENTAGEMDESCONTO = "//input[@placeholder='Ex. 30%']";
     String PORCENTAGEMDESCONTOFAIXAUM = "//input[@placeholder='Desconto aplicado para a faixa']";
     String INSERIRSKULISTAUM = "//input[@id='react-select-3-input']";
-    String INSERIRSKULISTADOIS = "//input[@id='react-select-itemsPromotions.1.limit_type-input']";
+    String INSERIRSKULISTADOIS = "//ul/li/div[2]//div[1]/div[1]/div/div/div[1]/div[2]/input";
     String BOTAOADICIONARSKU = "//span[contains(text(),'Adicionar')]";
-    String BOTAOADICIONARPROGRESSIVO = "//div[2]//ul[1]//div[3]//div[4]/button[1]";
+    String BOTAOADICIONARPROGRESSIVO = "//ul/li/ul/li//div[4]//button/span";
     String BOTAONOVOITEM = "//button[contains(text(),'Novo Item')]";
     String BOTAOSALVARPROMOCAO = "//span[contains(text(),'Salvar Promoção')]";
     String BOTAOCONFIRMARPROMOCAO = "//div[6]//div[2]//div[1]/button[1]";
@@ -207,7 +207,7 @@ public class NewPromotionPage {
     public void inserirSkuListaDois(){
         int skuValido = new Random().nextInt(5);
         String skusValidos = skusValidosListaDois()[skuValido];
-        driver.findElement(By.xpath(INSERIRSKULISTADOIS)).sendKeys(skusValidos, Keys.RETURN);
+        driver.findElement(By.xpath(INSERIRSKULISTADOIS) ).sendKeys(skusValidos, Keys.RETURN);
     }
     public void waitClicarBotaoAdicionarSku(){
         boolean btnAdicionarSkuClickable = false;

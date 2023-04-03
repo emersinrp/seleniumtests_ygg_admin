@@ -300,8 +300,8 @@ public class TestNewPromotionPage {
         asserts.validateContainsText(promocaoCriadaCombo);
         asserts.validateEqualsText(promocaoInativa, msgPromoInativa);
     }
-    /*@After
+    @After
     public void closeBrowser() {
         sttgsBrowser.closeBrowser();
-    }*/
+    }
 }
